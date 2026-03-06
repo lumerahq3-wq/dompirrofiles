@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dom Pirro Files</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Arial Black', Arial, sans-serif;
+      color: #000000;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 7vw, 5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+
+    #countdown {
+      display: flex;
+      align-items: center;
+      gap: clamp(4px, 1.5vw, 16px);
+    }
+
+    .number {
+      font-size: clamp(4rem, 18vw, 10rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .sep {
+      font-size: clamp(3.5rem, 16vw, 9rem);
+      font-weight: 900;
+      line-height: 1;
+      position: relative;
+      top: -0.05em;
+    }
+
+    #expired {
+      font-size: clamp(2rem, 8vw, 4rem);
+      font-weight: 900;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>The Dom Pirro Files</h1>
+
+  <div id="countdown">
+    <span class="number" id="hours">00</span>
+    <span class="sep">:</span>
+    <span class="number" id="minutes">00</span>
+    <span class="sep">:</span>
+    <span class="number" id="seconds">00</span>
+  </div>
+
+  <div id="expired">It's time.</div>
+
+  <script>
+    const target = new Date('2026-03-09T10:30:00-05:00');
+
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const countdown = document.getElementById('countdown');
+    const expired = document.getElementById('expired');
+
+    function pad(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    function tick() {
+      const diff = target - new Date();
+
+      if (diff <= 0) {
+        countdown.style.display = 'none';
+        expired.style.display = 'block';
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      hoursEl.textContent = pad(hours);
+      minutesEl.textContent = pad(minutes);
+      secondsEl.textContent = pad(seconds);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
