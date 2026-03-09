@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Dom Pirro Files</title>
+
   <style>
     * {
       margin: 0;
@@ -20,6 +21,11 @@
       min-height: 100vh;
       font-family: 'Arial Black', Arial, sans-serif;
       color: #000000;
+      transition: background 1s ease;
+    }
+
+    body.reveal {
+      background: url('background.png') center/cover no-repeat;
     }
 
     h1 {
@@ -58,7 +64,9 @@
     }
   </style>
 </head>
+
 <body>
+
   <h1>The Dom Pirro Files</h1>
 
   <div id="countdown">
@@ -90,6 +98,9 @@
       if (diff <= 0) {
         countdown.style.display = 'none';
         expired.style.display = 'block';
+
+        document.body.classList.add("reveal");
+
         return;
       }
 
@@ -106,5 +117,6 @@
     tick();
     setInterval(tick, 1000);
   </script>
+
 </body>
 </html>
