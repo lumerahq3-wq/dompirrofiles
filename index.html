@@ -1,131 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Dom Pirro Files</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dom Pirro Files</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      font-family: 'Arial Black', Arial, sans-serif;
-      color: #000000;
-      transition: background 1s ease;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
+body{
+  background:#ffffff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  font-family:'Arial Black', Arial, sans-serif;
+  color:#000;
+  transition:background 1s ease;
+  overflow:hidden;
+}
 
-    body.reveal {
-      background-image: url('background.png');
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-color: #000;
-    }
+h1{
+  font-size:clamp(2rem,7vw,5rem);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:48px;
+  text-align:center;
+}
 
-    h1 {
-      font-size: clamp(2rem, 7vw, 5rem);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 48px;
-      text-align: center;
-    }
+#countdown{
+  display:flex;
+  align-items:center;
+  gap:clamp(4px,1.5vw,16px);
+}
 
-    #countdown {
-      display: flex;
-      align-items: center;
-      gap: clamp(4px, 1.5vw, 16px);
-    }
+.number{
+  font-size:clamp(4rem,18vw,10rem);
+  font-weight:900;
+  line-height:1;
+}
 
-    .number {
-      font-size: clamp(4rem, 18vw, 10rem);
-      font-weight: 900;
-      line-height: 1;
-    }
+.sep{
+  font-size:clamp(3.5rem,16vw,9rem);
+  font-weight:900;
+  line-height:1;
+  position:relative;
+  top:-0.05em;
+}
 
-    .sep {
-      font-size: clamp(3.5rem, 16vw, 9rem);
-      font-weight: 900;
-      line-height: 1;
-      position: relative;
-      top: -0.05em;
-    }
+#expired{
+  font-size:clamp(2rem,8vw,4rem);
+  font-weight:900;
+  display:none;
+}
 
-    #expired {
-      font-size: clamp(2rem, 8vw, 4rem);
-      font-weight: 900;
-      display: none;
-    }
-  </style>
+/* image layout */
+
+#imageContainer{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  display:none;
+}
+
+.image{
+  flex:1;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+
+</style>
 </head>
 
 <body>
 
-  <h1>The Dom Pirro Files</h1>
+<h1>The Dom Pirro Files</h1>
 
-  <div id="countdown">
-    <span class="number" id="hours">00</span>
-    <span class="sep">:</span>
-    <span class="number" id="minutes">00</span>
-    <span class="sep">:</span>
-    <span class="number" id="seconds">00</span>
-  </div>
+<div id="countdown">
+  <span class="number" id="hours">00</span>
+  <span class="sep">:</span>
+  <span class="number" id="minutes">00</span>
+  <span class="sep">:</span>
+  <span class="number" id="seconds">00</span>
+</div>
 
-  <div id="expired">It's time.</div>
+<div id="expired">It's time.</div>
 
-  <script>
-    const target = new Date('2026-03-09T09:15:00-05:00');
+<div id="imageContainer"></div>
 
-    const hoursEl = document.getElementById('hours');
-    const minutesEl = document.getElementById('minutes');
-    const secondsEl = document.getElementById('seconds');
-    const countdown = document.getElementById('countdown');
-    const expired = document.getElementById('expired');
+<script>
 
-    function pad(n) {
-      return String(n).padStart(2, '0');
-    }
+const target = new Date('2026-03-09T09:24:00-05:00');
 
-    function tick() {
-      const diff = target - new Date();
+const hoursEl = document.getElementById('hours');
+const minutesEl = document.getElementById('minutes');
+const secondsEl = document.getElementById('seconds');
 
-      if (diff <= 0) {
-        countdown.style.display = 'none';
-        expired.style.display = 'block';
+const countdown = document.getElementById('countdown');
+const expired = document.getElementById('expired');
+const imageContainer = document.getElementById('imageContainer');
 
-        document.body.classList.add("reveal");
+function pad(n){
+  return String(n).padStart(2,'0');
+}
 
+function tick(){
+
+  const diff = target - new Date();
+
+  if(diff <= 0){
+
+    countdown.style.display="none";
+    expired.style.display="block";
+
+    setTimeout(startReveal,1000);
+
+    return;
+  }
+
+  const totalSeconds = Math.floor(diff/1000);
+
+  const hours = Math.floor(totalSeconds/3600);
+  const minutes = Math.floor((totalSeconds%3600)/60);
+  const seconds = totalSeconds%60;
+
+  hoursEl.textContent = pad(hours);
+  minutesEl.textContent = pad(minutes);
+  secondsEl.textContent = pad(seconds);
+}
+
+tick();
+setInterval(tick,1000);
+
+
+/* image auto loader */
+
+function startReveal(){
+
+  expired.style.display="none";
+
+  document.body.style.background="#000";
+
+  imageContainer.style.display="flex";
+
+  let foundImages=[];
+  let index=1;
+
+  function tryLoad(){
+
+    const img=new Image();
+    const src=index+".png";
+
+    img.onload=()=>{
+
+      foundImages.push(src);
+
+      if(foundImages.length===3){
+        displayImages(foundImages);
         return;
       }
 
-      const totalSeconds = Math.floor(diff / 1000);
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
+      index++;
+      tryLoad();
+    };
 
-      hoursEl.textContent = pad(hours);
-      minutesEl.textContent = pad(minutes);
-      secondsEl.textContent = pad(seconds);
-    }
+    img.onerror=()=>{
 
-    tick();
-    setInterval(tick, 1000);
-  </script>
+      index++;
+
+      if(index<20){
+        tryLoad();
+      }
+
+    };
+
+    img.src=src;
+  }
+
+  tryLoad();
+}
+
+function displayImages(images){
+
+  images.forEach(src=>{
+
+    const div=document.createElement("div");
+
+    div.className="image";
+    div.style.backgroundImage=`url(${src})`;
+
+    imageContainer.appendChild(div);
+
+  });
+
+}
+
+</script>
 
 </body>
 </html>
-
-
-
-
