@@ -12,18 +12,27 @@
   box-sizing:border-box;
 }
 
+
 body{
-  background:#ffffff;
+  background:radial-gradient(ellipse at 50% 60%, #1a1a1a 0%, #000 100%);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   min-height:100vh;
   font-family:'Arial Black', Arial, sans-serif;
-  color:#000;
+  color:#e00;
   transition:background 1s ease;
   overflow:hidden;
+  box-shadow:inset 0 0 200px 40px #000;
+  animation: ominous-bg 8s ease-in-out infinite alternate;
 }
+
+@keyframes ominous-bg {
+  0% { background:radial-gradient(ellipse at 50% 60%, #1a1a1a 0%, #000 100%); }
+  100% { background:radial-gradient(ellipse at 50% 40%, #2a0000 0%, #000 100%); }
+}
+
 
 h1{
   font-size:clamp(2rem,7vw,5rem);
@@ -32,6 +41,15 @@ h1{
   letter-spacing:0.08em;
   margin-bottom:48px;
   text-align:center;
+  color:#e00;
+  text-shadow:0 0 24px #e00, 0 0 64px #000, 0 0 2px #fff;
+  animation:pulse-text 1.8s infinite cubic-bezier(.4,0,.6,1);
+}
+
+@keyframes pulse-text {
+  0% { text-shadow:0 0 24px #e00, 0 0 64px #000, 0 0 2px #fff; color:#e00; }
+  50% { text-shadow:0 0 48px #ff2222, 0 0 128px #000, 0 0 8px #fff; color:#fff; }
+  100% { text-shadow:0 0 24px #e00, 0 0 64px #000, 0 0 2px #fff; color:#e00; }
 }
 
 #countdown{
@@ -40,11 +58,16 @@ h1{
   gap:clamp(4px,1.5vw,16px);
 }
 
+
 .number{
   font-size:clamp(4rem,18vw,10rem);
   font-weight:900;
   line-height:1;
+  color:#fff;
+  text-shadow:0 0 24px #e00, 0 0 64px #000, 0 0 2px #fff;
+  animation:pulse-text 1.8s infinite cubic-bezier(.4,0,.6,1);
 }
+
 
 .sep{
   font-size:clamp(3.5rem,16vw,9rem);
@@ -52,12 +75,19 @@ h1{
   line-height:1;
   position:relative;
   top:-0.05em;
+  color:#e00;
+  text-shadow:0 0 16px #e00, 0 0 32px #000;
+  animation:pulse-text 1.8s infinite cubic-bezier(.4,0,.6,1);
 }
+
 
 #expired{
   font-size:clamp(2rem,8vw,4rem);
   font-weight:900;
   display:none;
+  color:#e00;
+  text-shadow:0 0 24px #e00, 0 0 64px #000, 0 0 2px #fff;
+  animation:pulse-text 1.8s infinite cubic-bezier(.4,0,.6,1);
 }
 
 /* image layout */
@@ -97,6 +127,7 @@ h1{
 <!-- background music -->
 <audio id="bgMusic" src="music.mp3" autoplay loop></audio>
 
+
 <script>
 const target = new Date('2026-03-10T11:30:00-05:00');
 
@@ -107,6 +138,18 @@ const secondsEl = document.getElementById('seconds');
 const countdown = document.getElementById('countdown');
 const expired = document.getElementById('expired');
 const imageContainer = document.getElementById('imageContainer');
+
+// Animate ominous aura color shift
+let auraPhase = 0;
+function animateAura() {
+  auraPhase += 0.01;
+  const r = Math.floor(26 + 20 * Math.sin(auraPhase));
+  const g = Math.floor(0 + 10 * Math.sin(auraPhase + 2));
+  const b = Math.floor(0 + 10 * Math.sin(auraPhase + 4));
+  document.body.style.boxShadow = `inset 0 0 200px 40px rgb(${r},${g},${b})`;
+  requestAnimationFrame(animateAura);
+}
+animateAura();
 
 function pad(n){
   return String(n).padStart(2,'0');
