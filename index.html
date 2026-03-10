@@ -6,7 +6,6 @@
 <title>The Dom Pirro Files</title>
 
 <style>
-
 *{
   margin:0;
   padding:0;
@@ -62,7 +61,6 @@ h1{
 }
 
 /* image layout */
-
 #imageContainer{
   position:fixed;
   top:0;
@@ -78,7 +76,6 @@ h1{
   background-repeat:no-repeat;
   background-size:cover;
 }
-
 </style>
 </head>
 
@@ -95,11 +92,12 @@ h1{
 </div>
 
 <div id="expired">It's time.</div>
-
 <div id="imageContainer"></div>
 
-<script>
+<!-- background music -->
+<audio id="bgMusic" src="music.mp3" autoplay loop></audio>
 
+<script>
 const target = new Date('2026-03-10T11:30:00-05:00');
 
 const hoursEl = document.getElementById('hours');
@@ -115,21 +113,16 @@ function pad(n){
 }
 
 function tick(){
-
   const diff = target - new Date();
 
   if(diff <= 0){
-
     countdown.style.display="none";
     expired.style.display="block";
-
     setTimeout(startReveal,1000);
-
     return;
   }
 
   const totalSeconds = Math.floor(diff/1000);
-
   const hours = Math.floor(totalSeconds/3600);
   const minutes = Math.floor((totalSeconds%3600)/60);
   const seconds = totalSeconds%60;
@@ -142,46 +135,34 @@ function tick(){
 tick();
 setInterval(tick,1000);
 
-
 /* image auto loader */
-
 function startReveal(){
-
   expired.style.display="none";
-
   document.body.style.background="#000";
-
   imageContainer.style.display="flex";
 
   let foundImages=[];
   let index=1;
 
   function tryLoad(){
-
     const img=new Image();
     const src=index+".png";
 
     img.onload=()=>{
-
       foundImages.push(src);
-
       if(foundImages.length===3){
         displayImages(foundImages);
         return;
       }
-
       index++;
       tryLoad();
     };
 
     img.onerror=()=>{
-
       index++;
-
       if(index<20){
         tryLoad();
       }
-
     };
 
     img.src=src;
@@ -191,23 +172,14 @@ function startReveal(){
 }
 
 function displayImages(images){
-
   images.forEach(src=>{
-
     const div=document.createElement("div");
-
     div.className="image";
     div.style.backgroundImage=`url(${src})`;
-
     imageContainer.appendChild(div);
-
   });
-
 }
-
 </script>
 
 </body>
 </html>
-
-
